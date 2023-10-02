@@ -1,0 +1,49 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Logged Out Page</title>
+  <meta name="viewport" content="width=device-width,initial-scale=1.0">
+  <style>
+    body {
+      background-color: #007bff;
+      color: white;
+      font-family: Arial, sans-serif;
+      text-align: center;
+    }
+    
+    .container {
+      width: 300px;
+      margin: 0 auto;
+      padding: 20px;
+    }
+    
+    .message {
+      margin-top: 50px;
+      font-size: 24px;
+      font-weight: bold;
+    }
+    
+    .login-again {
+      margin-top: 20px;
+    }
+    
+    .login-button {
+      background-color: #ffffff;
+      color: #007bff;
+      padding: 10px 20px;
+      border: none;
+      cursor: pointer;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="message">Logged out successfully</div>
+    <div class="login-again">
+      <p>Want to login again?</p>
+      <button type="button" class="login-button"><a href="{%url 'login'%}" style="text-decoration:none;">Login</a></button>
+    </div>
+  </div>
+</body>
+</html>

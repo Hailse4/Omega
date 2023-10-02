@@ -1,0 +1,31 @@
+
+{%extends 'bases/headers.html'%}
+{%load static %}
+{%block bootstrap %}
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+{%endblock%}
+{%block cssfile%}
+<link rel="stylesheet" type="text/css" href="{%static 'chat/chatlist.css'%}">
+{%endblock%}
+{%block title%} Chat List{%endblock%}
+{%block content%}
+{%for item in connected %}
+  <a href="{%url 'chatroom' item.id%}" style="color:black;text-decoration:none;">
+  <div class="container">
+    <div class="row">
+      <div class="col-md-6 offset-md-3">
+        <div class="profile-box">
+          <img src="{{item.image.url}}" alt="Profile Image">
+          <span class="username">{{item.name}}</span>
+          <div class="text-center">
+            <small>you are now connected on chat</small>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</a>
+{%endfor%}
+  <!-- Include Bootstrap JS -->
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+ {%endblock%}

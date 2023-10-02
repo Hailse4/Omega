@@ -1,0 +1,106 @@
+{%extends 'bases/headers.html'%}
+{%load follow_tags%}
+{%load static %}
+     {%block title%} Friends List{%endblock%}
+     {%block cssfile%}
+        <link rel="stylesheet" href="{% static 'follow/friends.css'%}" type="text/css">
+     {%endblock%}
+     {%block content%}
+    <h5>Your Followers</h5>
+    {% for i,item in yfollowers %}
+      <form class="mform" method="POST">
+     <div class="user-box">
+      {%csrf_token%}
+    <img src="{{item.profile.image.url}}" alt="Profile Image">
+    <div>
+      <div class="username">{{item.profile.name}}</div>
+      <div class="button-container" id="btn_cont">
+        <button value="follow" onclick="setValue('follow')" type="submit" class="follow-btn">Follow Back</button>
+        <button value="delete" onclick="setValue('delete')" type="submit" class="delete-btn">Delete</button>
+      </div>
+    </div>
+         <script>
+             if(true){
+                 const mform = document.getElementsByClassName("mform")[{{i}}];
+                 const btn_cont = document.getElementsByClassName("button-container")[{{i}}];
+                 var buttonval = null;
+                 function setValue(value){
+                     buttonval = value;
+                 };
+                 mform.addEventListener("submit",handleForm);
+                 function handleForm(e){
+                     e.preventDefault();
+                     if (buttonval == "follow"){
+                         var remove = "False"
+                     }
+                     else if(buttonval == "delete"){
+                         var remove = "True"
+                     }
+                     const xhr = new XMLHttpRequest();
+                     const csrf = document.querySelectorAll(
+                         'input[name="csrfmiddlewaretoken"]'
+                         )[{{i}}].getAttribute('value');
+                     xhr.open("POST","{%url 'follow'%}", true);
+                     xhr.setRequestHeader(
+                         "Content-type","application/x-www-form-urlencoded"
+                         );
+                     xhr.setRequestHeader("X-CSRFToken",csrf);
+                     const params = "follower_proid={{profile.id}}&following_proid={{item.profile.id}}&remove="+remove;
+                     xhr.onload = function (e){
+                        if(this.status == 200){
+                            const data = JSON.parse(this.responseText);
+                            btn_cont.innerHTML = data.msg;
+                        };
+                     };
+                     xhr.send(params);
+                 
+                 };
+             }
+         </script>
+          </div>
+    </form>
+    {%endfor%}
+    <h5>suggestions</h5>
+    {%with start=yfollowers|length%}
+    {%for i,item in suggest %}
+  <div class="user-box">
+    <img src="{{item.image.url}}" alt="Profile Image">
+    <div>
+      <div class="username">{{item.name}}</div>
+      <div class="button-container">
+          <form method='POST' class="sform">
+              {%csrf_token%}
+        <button  class="follow-btn">Follow</button>
+          </form>
+      </div>
+    </div>
+      <script>
+          if(true){
+              const sform = document.getElementsByClassName("sform")[{{i}}+{{start}}];
+              sform.addEventListener('submit',handleSform);
+              function handleSform(e){
+                  e.preventDefault();
+                  const xhr = new XMLHttpRequest();
+                  const csrf = document.querySelectorAll(
+                      'input[name="csrfmiddlewaretoken"]'
+                      )[{{i}}+{{start}}].getAttribute('value');
+                  xhr.open("POST","{%url 'follow'%}",true);
+                  xhr.setRequestHeader(
+                      "Content-type","application/x-www-form-urlencoded"
+                      );
+                  xhr.setRequestHeader("X-CSRFToken",csrf);
+                  const params = "follower_proid={{profile.id}}&following_proid={{item.id}}&remove=False";
+                  xhr.onload = function (e){
+                      if(this.status == 200){
+                          const data = JSON.parse(this.responseText);
+                          sform.innerHTML = data.msg;
+                      };
+                  };
+                  xhr.send(params);
+              };
+          }
+      </script>
+  </div>
+    {%endfor%}
+    {%endwith%}
+{%endblock%}

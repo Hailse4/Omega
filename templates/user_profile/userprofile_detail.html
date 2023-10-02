@@ -1,0 +1,140 @@
+{%load static%}
+<!DOCTYPE html>
+<html>
+<head>
+    <title>User Profile</title>
+    <meta name="viewport" content="width=device-width,initial-scale=1.0">
+      <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" integrity="sha512-XXXX" crossorigin="anonymous">
+    <link rel="stylesheet" type="text/css" href="{%static 'user_profile/profile_detail.css'%}">
+</head>
+<body>
+    <div class="container">
+        <div class="profile-box">
+        {%if own_profile%}
+        <div class="dropdown">
+        <span>Menu &#x25BC;</span>
+        <div class="dropdown-content">
+            <div class="dropdown-item"><a href="#">Settings</a></div>
+            <div class="dropdown-item"><a class="menu-link" href="{%url 'logout'%}">Logout</a></div>
+            <div class="dropdown-item"><a class="menu-link" href="{%url 'update-profile' profile_obj.id%}">Update Profile</a></div>
+            <div class="dropdown-item"><a class="menu-link" href="{%url 'post'%}">Post</a></div>
+        </div>
+    </div>
+            {%endif%}
+            <div class="profile-image">
+                <img src="{{profile_obj.image.url}}" alt="Profile Image">				  
+            </div>
+            {%if own_profile%}
+            <div class="update-profile">
+               <a href="{%url 'update-profile' profile_obj.id%}" class="menu-link"> <i class="fa fa-pencil" style="font-size:24px"></i></a>
+            </div>
+            {%endif%}
+            <h3>{{profile_obj.name}}</h3>
+            <small>{{profile_obj.bio}}</small>
+            <div class="bottom-content">
+                <span>Flowers: 100</span>
+					   	     		     
+                <span>Following: 100</span>
+                <span>Posts: {{post_count}}</span>
+            </div>
+            {%if not own_profile%}
+            <div class="follow-button">
+                <form id="form" method="POST">
+                    {%csrf_token%}
+                <button class="btn btn-primary" type="submit" id="follow-btn">{{state}}</button>
+                </form>			      		 	     	    
+            </div>
+            <script>
+                var form_btn = document.querySelector("#follow-btn");
+                var form = document.getElementById("form");
+                form.onsubmit = function (e){
+                    e.preventDefault();
+                    const csrf = document.querySelector(
+                'input[name="csrfmiddlewaretoken"]').getAttribute('value');
+                    console.log("csrf",csrf)
+                    const xhr = new XMLHttpRequest();
+                    xhr.open("POST","{%url 'follow'%}",true);
+                    xhr.setRequestHeader(
+                        "Content-type","application/x-www-form-urlencoded"
+                        );
+                    console.log("csrf2",csrf);
+                    xhr.setRequestHeader("X-CSRFToken",csrf);
+                    const params = "follower_proid="+{{current_user_pro}}+"&following_proid="+{{profile_obj.id}}+"&remove=False";
+                    xhr.onload = function (){
+                        if(this.status == 200){
+                            const data = JSON.parse(this.responseText);
+                            console.log("state",data);
+                            form_btn.innerHTML = data.state;
+                        };
+                    };
+                    xhr.send(params);
+                }
+            </script>
+            {%endif%}
+        </div>
+    </div> 
+    {%for post in posts%}
+      <div class="forpostcontainer">
+    <div class="post-container">
+      <img id="profile-image" src="{{post.profile.image.url}}" alt="Profile Image">
+      <div class="post-info">
+        <h4>{{post.profile.name}}</h4>
+        <small>{{post.created_at}}</small>
+      </div>
+        {%if own_profile %}
+      <i class="fas fa-ellipsis-v menu-icon"></i> <!-- Added -->
+      <div class="menu-items"> <!-- Added -->
+        <a href="{%url 'update-post' post.id%}">Update Post</a>
+        <a href="{%url 'delete-post' post.id%}">Delete Post</a>
+      </div>
+    {%endif%}
+    </div>
+    <p>{{post.description}}</p>
+    <img class="post-image" src="{{post.image.url}}" alt="Post Image">
+    <div class="post-buttons">
+        <form method="POST" id="likeform">
+            {%csrf_token%}
+            <button class="btn btn-primary" type="submit"><i class="fas fa-thumbs-up"></i></button></form>
+            <span id="like_count">{{post.like}}</span>
+        <a id="cmtlink" href="{%url 'postdetail' post.id%}"><button class="btn btn-primary comment-button"><i class="fas fa-comment"></i></button></a><span>{{post.comment}}</span>
+      <button class="btn btn-primary share-button"><i class="fas fa-share"></i></button>
+    </div>
+  </div>
+    <script type="text/JavaScript">
+        var likeform = document.getElementById("likeform");
+        likeform.addEventListener("submit",manage);
+        function manage(e){
+            e.preventDefault();
+            var xhr = new XMLHttpRequest();
+            var user_id = "{{user.id}}" ;
+            var post_id = "{{post.id}}";
+            var csrf = document.querySelector('input[name="csrfmiddlewaretoken"]').getAttribute('value')
+            //document.write(post_id)
+            xhr.open("POST","{%url 'postlike'%}",true);
+            xhr.setRequestHeader('Content-Type','application/x-www-form-urlencoded')
+            xhr.onload = function (){
+                if(this.status == 200){
+                    var like_count = document.getElementById("like_count");
+                    like_count.innerHTML = JSON.parse(this.responseText).likecount;
+                }
+            };
+            xhr.send("user="+user_id+"&post="+post_id+"&csrfmiddlewaretoken="+csrf);
+        }
+    </script>
+   {%endfor%}
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+  <script>
+    // Added script to toggle menu visibility
+    const menuIcon = document.querySelector(".menu-icon");
+    const menuItems = document.querySelector(".menu-items");
+
+    menuIcon.addEventListener("click", function() {
+      menuItems.style.display = (menuItems.style.display === "block") ? "none" : "block";
+    });
+    </script>
+</body>
+</html>

@@ -1,0 +1,41 @@
+
+<!DOCTYPE html>
+<html>
+
+<head>
+  <title>Delete Post Confirmation</title>
+  <!-- Include Bootstrap CSS -->
+  <meta name="viewport" content="width=device-width,initial-scale=1.0">
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+  <style>
+    /* Center the content */
+    body {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+    }
+
+    /* Style the container */
+    .container {
+      max-width: 400px;
+      text-align: center;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="container">
+    <h2>Are you sure you want to delete this post?</h3>
+      <a href="{%url 'profile' object.profile.id%}" class="btn-link"><button class="btn btn-secondary">Cancel</button></a>
+      <form method="post">
+          {%csrf_token%}
+    <button type="submit" class="btn btn-danger">Delete</button>
+      </form>
+  </div>
+
+  <!-- Include Bootstrap JS -->
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
+
+</html>

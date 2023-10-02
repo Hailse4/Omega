@@ -1,0 +1,89 @@
+{%load static%}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    {%block bootstrap%}
+    {%endblock%}
+      <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    <link rel="stylesheet" href="{%static 'bases/headers.css'%}" type="text/css">
+    {%block cssfile%}
+    {%endblock%}
+  <title>{%block title%} Home page {%endblock%}</title>
+</head>
+<body>
+    <!-- Navbar -->
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+        {%if user.is_authenticated%}
+        <a class="pro-lnk" href="{%url 'profile' profile.id%}">
+        <div class="profile">
+            <img class="profile-image" src="{{profile.image.url}}" alt="Profile Image">
+            <div>
+                <span class="profile-username">{{profile.name}}</span>
+            </div>
+        </div>
+        </a>
+        {%endif%}
+        <a class="navbar-brand" href="#">
+            Omega <i class="fas fa-omega">&Omega;</i>
+        </a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <ul class="navbar-nav ml-auto">
+                <li class="nav-item">
+                    <a class="nav-link" href="{%url 'home'%}"><i class="fas fa-home"></i> Home</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#"><i class="fas fa-bell"></i> Notification</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{%url 'chatlist'%}"><i class="fas fa-comments"></i> Chat</a>
+                </li>
+                {%if user.is_authenticated%}
+                <li class="nav-item">
+                    <a class="nav-link" href="{%url 'friends'%}"><i class="fas fa-users"></i> Friends</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{%url 'profile' profile.id %}"><i class="fas fa-user"></i> Profile</a>
+                </li>
+                {%else%}
+                <li class="nav-item">
+                    <a class="nav-link" href="{%url 'login'%}"><i class="fas fa-users"></i>Friends</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{%url 'login'%}"><i class="fas fa-user"></i> Profile</a>
+                </li>
+                {%endif%}
+            </ul>
+        </div>
+    </nav>
+
+    <!-- Search Form -->
+    <div class="container">
+        <form class="search-form">
+            <div class="input-group">
+                <input type="text" class="form-control search-input" placeholder="Search">
+                <div class="input-group-append">
+                    <button type="submit" class="btn btn-primary search-btn"><i class="fas fa-search"></i></button>
+                </div>
+            </div>
+        </form>
+    </div>
+
+    <!-- Bootstrap and Font Awesome Scripts -->
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    {% block content%}
+    {%endblock%}
+    </body>
+</html>
+
+    

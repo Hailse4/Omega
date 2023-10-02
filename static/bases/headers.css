@@ -1,0 +1,62 @@
+        /* Custom CSS */
+        .navbar {
+            background-color: #f8f9fa;
+        }
+
+        .navbar-brand {
+            font-size: 24px;
+            padding: 10px;
+            color: #333;
+        }
+
+        .nav-tabs .nav-link {
+            font-size: 18px;
+            color: #333;
+        }
+
+        .nav-tabs .nav-link i {
+            margin-right: 5px;
+            color: blue; /* Change symbol color to blue */
+        }
+
+        .search-form {
+            display: flex;
+            align-items: center;
+            margin-top: 20px;
+        }
+
+        .search-input {
+            flex-grow: 1;
+            padding: 10px;
+            font-size: 16px;
+            border-radius: 5px;
+        }
+
+        .search-btn {
+            padding: 10px 15px;
+            background-color: #007bff;
+            border: none;
+            color: #fff;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        .profile {
+            display: flex;
+            align-items: center;
+            margin: 10px;
+        }
+
+        .profile-image {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            margin-right: 10px;
+        }
+
+        .profile-username {
+            font-weight: bold;
+        }
+    .pro-lnk{
+        text-decoration:none;
+        color:black;
+     }

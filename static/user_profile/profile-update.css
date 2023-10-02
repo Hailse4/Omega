@@ -1,0 +1,42 @@
+
+
+    body {
+      background-color: #007bff;
+      color: white;
+      font-family: Arial, sans-serif;
+    }
+
+    .container {
+      background-color: white;
+      color:#050A00;
+      width: 400px;
+      padding: 20px;
+      margin: 0 auto;
+      margin-top: 50px;
+      border-radius: 5px;
+    }
+
+    .container label {
+      display: block;
+      margin-bottom: 10px;
+    }
+
+    .container input[type="text"],
+    .container input [type="file"],
+    .container textarea {
+      width: 100%;
+      padding: 5px;
+      border-radius: 3px;
+      border: 1px solid #ccc;
+    }
+
+    .container input[type="submit"] {
+      background-color: #007bff;
+      color: white;
+      border: none;
+      padding: 10px 20px;
+      font-size: 16px;
+      border-radius: 3px;
+      margin-top:20px;
+      cursor: pointer;
+    }

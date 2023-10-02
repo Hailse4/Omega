@@ -1,0 +1,108 @@
+        /* CSS styles for the comment card */
+        .comment-card {
+            display: flex;
+            align-items: flex-start;
+            margin-bottom: 10px;
+            background-color:#F8F8F8;
+        }
+
+        .comment-card .profile-image {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            margin-right: 10px;
+        }
+
+        .comment-card .username {
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+
+        .comment-card .comment {
+            margin: 0;
+        }
+        .pro-lnk{
+        text-decoration:none;
+        color:black;
+     }
+    .post-container {
+      display: flex;
+      align-items: flex-start;
+      margin-bottom: 20px;
+      margin-top:40px;
+      position: relative; /* Added */
+    }
+
+    .profile-image2 {
+      width: 80px;
+      height: 80px;
+      border-radius: 50%;
+      margin-right: 10px;
+    }
+
+    .post-info {
+      margin-bottom: 10px;
+    }
+
+    .post-image {
+      max-width: 100%;
+      margin-bottom: 10px;
+    }
+
+    .post-buttons {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .post-buttons button {
+      margin-right: 10px;
+      border-radius: 50%;
+      width: 40px;
+      height: 40px;
+      padding: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background-color: white;
+      border: 1px solid #ccc;
+    }
+
+    .post-buttons .share-button {
+      margin-left: auto;
+      margin-right: 0;
+    }
+
+    .post-buttons .comment-button {
+      margin-left: auto;
+      margin-right: auto;
+    }
+    .input-bar {
+    display: flex;
+    align-items: center;
+    margin-top: 20px;
+}
+
+.input-bar input {
+    flex: 1;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    margin-right: 10px;
+}
+
+.input-bar button {
+    width: 40px;
+    height: 40px;
+    padding: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: white;
+    border: 1px solid #ccc;
+    border-radius: 50%;
+}
+
+.telegram-button {
+    color: #0088cc;
+}

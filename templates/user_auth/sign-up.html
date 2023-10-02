@@ -1,0 +1,42 @@
+{%load static%}
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Sign-up Page</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" type="text/css" href="{%static 'user_auth/sign-up.css'%}">
+</head>
+<body>
+  <div class="container">
+    <h2 id="signup-text">Sign Up</h2>
+    <form method="POST">
+       {%csrf_token%}
+      {%for error in form.username.errors%}
+      <small style="color:red;">{{error}}</small>
+        
+      {%endfor%}
+      <input type="text" name="username" class="input-field" placeholder="Username" required>
+      <input type="email" name="email"  class="input-field" placeholder="Email" required>
+      {%for error in form.password1.errors%}
+       <small style="color:red;">{{error}}</small>
+      {%endfor%}
+      <input type="password" name="password1" class="input-field" placeholder="Password" required>
+      {%for error in form.password2.errors%}
+      <small style="color:red;">{{error}}</small>
+      {%endfor%}
+      <input type="password" name="password2" class="input-field" placeholder="Confirm Password" required>
+      <button type="submit" class="signup-button">Sign Up</button>
+    </form>
+    <p class="login-link">Already have an account? <a id="login" href="{%url 'login'%}">Login</a></p>
+  </div>
+</body>
+</html>
+
+
+
+
+
+
+
+
+

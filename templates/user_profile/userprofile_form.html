@@ -1,0 +1,28 @@
+{%load static %}
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Profile Update</title>
+  <meta name="viewport" content="width=device-width,initial-scale=1.0">
+    <link rel="stylesheet" type="text/css" href="{%static 'user_profile/profile-update.css'%}">
+  </head>
+<body>
+  <div class="container">
+    <h2 style="color:#007bff;">Profile Update</h2>
+    <form method="POST" enctype="multipart/form-data">
+        {%csrf_token%}
+        {%for field in form%}
+        {{field.label_tag}}
+           {%for error in field.errors%}
+        <small style="color:red;">{{error}}</small>
+           {%endfor%}
+         {{field}}
+        <small>{{field.help_text}}</small>
+        {%endfor%}
+        
+      <input type="submit" value="Update Profile">
+    </form>
+  </div>
+</body>
+</html>
+

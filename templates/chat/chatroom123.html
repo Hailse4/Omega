@@ -1,0 +1,69 @@
+{%load static%}
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Chat Page</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" type="text/css" href="{%static 'chat/chatroom.css'%}">
+    </head>
+<body>
+    <div class="container">
+        <div class="header">
+            <img class="profile-image" src="{{rprofile.image.url}}" alt="Profile Image">
+            <h2 class="username">{{rprofile.name}}</h2>
+        </div>
+        {%for item in sender_chat%}
+        <div class="message-output">
+            <div class="message-sender">
+                <p>{{item.message}}</p>
+            </div>
+        {%endfor%}
+        {%for item in receiver_chat%}
+            <div class="message-receiver">
+                <p>{{item.message}}</p>
+            </div>
+        {%endfor%}
+            <!-- Add more messages here -->
+        </div>
+        <div class="input-bar">
+            <input type="text" class="input-box" placeholder="Type your message">
+            <button class="send-button">Send</button>
+        </div>
+        <script>
+            var p = document.createElement('p');
+            var msgoutput = document.querySelectorAll(
+                '.message-output')[0];
+            var msgsender = document.querySelectorAll(
+                '.message-sender')[0].cloneNode();
+            var msgrecv = document.querySelectorAll(
+                '.message-receiver')[0].cloneNode();
+            var sendbtn = document.querySelectorAll('.send-button')[0];
+            var inputbox = document.querySelectorAll('.input-box')[0];
+            var url = "ws://" +window.location.host + '/ws/chat/{{roomname}}/'
+            var websocket = new WebSocket(url);
+            websocket.onmessage = function (e){
+                const data = JSON.parse(e.data);
+                const message = data.message;
+                console.log(message)
+                p.innerHTML = message;
+                msgrecv.appendChild(p);
+                msgoutput.appendChild(msgrecv);
+            };
+            sendbtn.onclick = function (e){  
+                const message = JSON.stringify(
+                    {
+                        'message':inputbox.value,'sender':{{sprofile.id}},
+                        'receiver':{{rprofile.id}},
+                    });
+                websocket.send(message);
+                p.innerHTML = inputbox.value;
+                msgsender.appendChild(p);
+                msgoutput.appendChild(msgsender);
+                inputbox.value = '';
+            };
+            
+            
+        </script>
+    </div>
+   </body>
+</html>

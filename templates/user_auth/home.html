@@ -1,0 +1,50 @@
+{%extends 'bases/headers.html'%}
+
+{%load static%}
+    {%block cssfile%}
+     <link rel="stylesheet" href="{% static 'user_auth/home.css'%}">
+    {%endblock%}
+    {%block content%}
+    {%for object in object_list%}
+  <div class="container2">
+    <div class="post-container">
+      <img class="profile-image2" src="{{object.profile.image.url}}" alt="Profile Image">
+      <div class="post-info">
+          <h4><a class="pro-lnk" href="{%url 'profile' object.profile.id%}">{{object.profile.name}}</a></h4>
+        <p>{{object.created_at}}</p>
+            </div>
+
+    </div>
+    <p>{{object.description}}</p>
+    <img class="post-image" src="{{object.image.url}}" alt="Post Image">
+    <div class="post-buttons">
+        <form method="post" id="likeform">
+        {%csrf_token%}
+      <button type="submit" class="btn btn-primary" id="like"><i class="fas fa-thumbs-up"></i></button></form><span id="like_count">{{object.like}}</span>
+      <a class="cmtlink" href="{%url 'postdetail' object.id%}"><button class="btn btn-primary comment-button"><i class="fas fa-comment"></i></button></a><span>{{object.comment}}</span>
+      <button class="btn btn-primary share-button"><i class="fas fa-share"></i></button>
+    </div>
+  </div>
+    <script type="text/JavaScript">
+        var likeform = document.getElementById("likeform");
+        likeform.addEventListener("submit",manage);
+        function manage(e){
+            e.preventDefault();
+            var xhr = new XMLHttpRequest();
+            var user_id = "{{user.id}}" ;
+            var post_id = "{{object.id}}";
+            var csrf = document.querySelector('input[name="csrfmiddlewaretoken"]').getAttribute('value')
+            //document.write(post_id)
+            xhr.open("POST","{%url 'postlike'%}",true);
+            xhr.setRequestHeader('Content-Type','application/x-www-form-urlencoded')
+            xhr.onload = function (){
+                if(this.status == 200){
+                    var like_count = document.getElementById("like_count");
+                    like_count.innerHTML = JSON.parse(this.responseText).likecount;
+                }
+            };
+            xhr.send("user="+user_id+"&post="+post_id+"&csrfmiddlewaretoken="+csrf);
+        }
+    </script>
+    {%endfor%}
+    {%endblock%}

@@ -1,0 +1,23 @@
+    .profile-box {
+      border: 1px solid #ccc;
+      border-radius: 10px;
+      padding: 20px;
+      margin: 20px;
+    }
+
+    .profile-box img {
+      width: 60px;
+      height: 60px;
+      border-radius: 50%;
+      float: left;
+      margin-right: 10px;
+    }
+
+    .profile-box .username {
+      font-weight: bold;
+    }
+
+    .profile-box .text-center {
+      text-align: center;
+      margin-top:10px;
+    }

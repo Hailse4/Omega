@@ -1,0 +1,116 @@
+{%load static%}
+<html>
+<head>
+	<meta name="viewport" content="width=device-width,initial-scale=1.0">
+    <link rel="stylesheet" type="text/css" href="{%static 'chat/chatroom.css'%}">
+    </head>
+<body>
+
+<div class="chat-container">
+  
+<div class="chat-header">
+Chat App
+</div>
+
+<div class="chat-content" id="chat-content">
+{%for obj in all_chat%}
+{%if obj.sender == sprofile%}
+<div class="chat-message chat-message-left">
+<img src="{{rprofile.image.url}}" alt="User1" class="chat-avatar">
+<p class="chat-text chat-text-left">{{obj.message}}</p>
+</div>  
+{%else%}
+<div class="chat-message chat-message-right">
+<img src="{{sprofile.image.url}}" alt="User2" class="chat-avatar">
+<p class="chat-text chat-text-right">{{obj.message}}</p>
+</div>
+{%endif%}
+{%endfor%}
+</div>
+
+<div class="chat-input">
+<input type="text" placeholder="Type a message" id="chat-input-text" class="chat-input-text">
+<button onclick="sendMessage()" id="chat-input-button" class="chat-input-button">Send</button>
+</div>
+
+</div>
+
+<script>
+var url = "ws://" + window.location.host + '/ws/chat/{{roomname}}/';
+var websocket = new WebSocket(url);  
+  
+websocket.onmessage = function (e){
+var data = JSON.parse(e.data);
+var msg = data.message
+var chat = document.getElementById("chat-content");
+var message = document.createElement("div");
+message.className = "chat-message chat-message-left";
+var image = document.createElement("img");
+image.src = "{{rprofile.image.url}}";
+image.alt = "User1";
+image.className = "chat-avatar";
+
+var text = document.createElement("p");
+text.className = "chat-text chat-text-left";
+text.textContent = msg;
+    
+// Append the image and the text to the message element
+message.appendChild(image);
+message.appendChild(text);
+
+// Append the message element to the chat content element
+chat.appendChild(message);
+
+// Scroll to the bottom of the chat content element
+chat.scrollTop = chat.scrollHeight;
+    
+};
+// This function sends a message from the current user
+function sendMessage() {
+  
+// Get the input element and the chat content element
+var input = document.getElementById("chat-input-text");
+var chat = document.getElementById("chat-content");
+
+// Create a new chat message element
+var message = document.createElement("div");
+message.className = "chat-message chat-message-right";
+
+
+
+
+const msg = JSON.stringify(
+                    {
+                        'message':input.value,'sender':{{sprofile.id}},
+                        'receiver':{{rprofile.id}},
+                    });
+websocket.send(msg);
+
+// Create an image element for the avatar
+var image = document.createElement("img");
+image.src = "{{sprofile.image.url}}";
+image.alt = "User2";
+image.className = "chat-avatar";
+
+// Create a paragraph element for the text
+var text = document.createElement("p");
+text.className = "chat-text chat-text-right";
+text.textContent = input.value;
+
+// Append the image and the text to the message element
+message.appendChild(image);
+message.appendChild(text);
+
+// Append the message element to the chat content element
+chat.appendChild(message);
+
+// Scroll to the bottom of the chat content element
+chat.scrollTop = chat.scrollHeight;
+
+// Clear the input element
+input.value = "";
+}
+</script>
+
+</body>
+</html>

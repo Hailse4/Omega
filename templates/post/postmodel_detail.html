@@ -1,0 +1,113 @@
+{%load static %}
+<!DOCTYPE html>
+<html>
+<head>
+	<meta name="viewport" content="width=device-width,initial-scale=1.0">
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" integrity="sha512-..." crossorigin="anonymous" />
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    <link rel="stylesheet" href="{%static 'post/post_detail.css'%}" type="text/css"/>
+</head>
+<body>
+	<div class="container2">
+    <div class="post-container">
+      <img class="profile-image2" src="{{object.profile.image.url}}" alt="Profile Image">
+      <div class="post-info">
+          <h4><a class="pro-lnk" href="{%url 'profile' object.profile.id%}">{{object.profile.name}}</a></h4>
+        <p>{{object.profile.created_at}}</p>
+            </div>
+
+    </div>
+    <p>{{object.description}}</p>
+    <img class="post-image" src="{{object.image.url}}" alt="Post Image">
+    <div class="post-buttons">
+        <form method="post" id="likeform">
+        {%csrf_token%}
+      <button type="submit" class="btn btn-primary" id="like"><i class="fas fa-thumbs-up"></i></button></form><span id="like_count">{{object.like}}</span>
+      <button class="btn btn-primary comment-button"><i class="fas fa-comment"></i></button><span id="cmt">{{object.comment}}</span>
+      <button class="btn btn-primary share-button"><i class="fas fa-share"></i></button>
+    </div>
+  </div>
+    <script type="text/JavaScript">
+        var likeform = document.getElementById("likeform");
+        likeform.addEventListener("submit",manage);
+        function manage(e){
+            e.preventDefault();
+            var xhr = new XMLHttpRequest();
+            var user_id = "{{user.id}}" ;
+            var post_id = "{{object.id}}";
+            var csrf = document.querySelectorAll('input[name="csrfmiddlewaretoken"]')[0].getAttribute('value')
+            xhr.open("POST","{%url 'postlike'%}",true);
+            xhr.setRequestHeader('Content-Type','application/x-www-form-urlencoded')
+            xhr.onload = function (){
+                if(this.status == 200){
+                    var like_count = document.getElementById("like_count");
+                    like_count.innerHTML = JSON.parse(this.responseText).likecount;
+                }
+            };
+            xhr.send("user="+user_id+"&post="+post_id+"&csrfmiddlewaretoken="+csrf);
+        }
+    </script>
+    <be><br><br>
+    <div id="body1">
+    {%for comment in comments %}
+    <div class="comment-card">
+        <img id="cimg" src="{{comment.profile.image.url}}" alt="Profile Image" class="profile-image">
+        <div id="cb">
+            <p class="username">{{comment.profile.name}}</p>
+            <p class="comment">{{comment.comment}}</p>
+        </div>
+        </div>
+    {%endfor%}
+        </div>
+    <form method="POST"id="cmform">
+        {%csrf_token%}
+    <div class="input-bar">
+    <input id="cminp" type="text" placeholder="Type your comment ">
+    <button class="telegram-button" type="submit"><i class="fab fa-telegram-plane"></i></button>
+</div>
+        </form>
+        <script type="text/JavaScript">
+           var cmform = document.getElementById("cmform");
+           cmform.addEventListener("submit",Createcm);
+           function Createcm(e){
+               e.preventDefault();
+               console.log("Sosoo to be")
+               var xhr = new XMLHttpRequest();
+               xhr.open("POST","{%url 'postdetail' object.id%}",true);
+               xhr.setRequestHeader("Content-type","application/x-www-form-urlencoded");
+               var cmt = document.querySelectorAll('input[name="csrfmiddlewaretoken"]')[1].getAttribute('value');
+               var post = "{{object.id}}"
+               var cminp = document.getElementById("cminp").value
+               var params = "csrfmiddlewaretoken="+cmt+"&post="+post+"&user="+"{{user.id}}"+"&comment="+cminp;
+               var cminpp = document.getElementById("cminp")
+               
+               xhr.onload = function (){
+                   var cc = document.getElementsByClassName("comment-card")[0].cloneNode();
+                   var body = document.getElementById("body1");
+                   var cimg = document.getElementById("cimg").cloneNode();
+                   var cb = document.getElementById("cb").cloneNode();
+                   var cn = document.getElementsByClassName("username")[0].cloneNode();
+                   var ct = document.getElementsByClassName("comment")[0].cloneNode();
+                   if(this.status == 200){
+                       var data = JSON.parse(this.responseText)
+                       var cmt = document.getElementById("cmt")
+                       cmt.innerHTML = data.cm_no
+                       cimg.src = data.proimg
+                       cn.innerHTML = data.name
+                       ct.innerHTML = data.comment
+                       cb.appendChild(cn)
+                       cb.appendChild(ct)
+                       cc.appendChild(cimg)
+                       cc.appendChild(cb)
+                       body.prepend(cc)
+                       cminpp.value = ""
+                   }
+               };
+               xhr.send(params);
+           }
+        </script>
+</body>
+</html>
