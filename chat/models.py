@@ -15,3 +15,13 @@ class ChatModel(models.Model):
         return name
     class Meta:
         get_latest_by = 'time'
+
+        
+class LiveChatModel(models.Model):
+    state = models.CharField(max_length=10)
+    sender = models.ForeignKey(UserProfile,on_delete=models.CASCADE)
+    message = models.TextField(max_length=500)
+    receiver = models.ForeignKey(
+        UserProfile,on_delete=models.CASCADE,
+        related_name='chat_receiver'
+    )

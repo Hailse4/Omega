@@ -9,6 +9,93 @@
 {%endblock%}
 {%block title%} Chat List{%endblock%}
 {%block content%}
+<div id="warp"></div>
+<script>
+
+var url = "ws://"+window.location.host+"/ws/livechat/{{profile.name}}/";
+
+var socket = new WebSocket(url);
+socket.onmessage = function (e){
+const data = JSON.parse(e.data);
+const cont = document.getElementById(data.obj_id.toString());
+if (cont){
+
+const img = cont.querySelector('.row').querySelector('div').querySelector('.profile-box').querySelector('img');
+
+const span = cont.querySelector('.row').querySelector('div').querySelector('.profile-box').querySelector('span');
+
+const small = cont.querySelector('.row').querySelector('div').querySelector('.profile-box').querySelector('.text-center').querySelector('small') ;
+
+img.src = data.img_url;
+span.innerHTML = data.name;
+small.innerHTML = data.message;
+}
+else{
+const warp = document.querySelector('#warp');
+const link = document.createElement('a');
+const cont = document.createElement('div');
+const row = document.createElement('div');
+const style = document.createElement('div');
+const pro_box = document.createElement('div');
+const txt_center = document.createElement('div');
+const img = document.createElement('img');
+const span = document.createElement('span');
+const small = document.createElement('small');
+cont.className = 'container';
+cont.id = data.obj_id.toString();
+row.className = 'row';
+style.className = 'col-md-6 offset-md-3';
+pro_box.className = 'profile-box';
+img.alt = "Profile Image";
+img.src = data.img_url;
+span.className = "username";
+span.innerHTML = data.name;
+txt_center.className = 'text-center';
+small.innerHTML = data.message;
+link.href = window.location.origin+'/chat/chatroom/'+data.sender_id;
+link.style = 'text-decration:none;color:black;';
+console.log(window)
+txt_center.appendChild(small);
+pro_box.appendChild(img);
+pro_box.appendChild(span);
+pro_box.appendChild(txt_center);
+style.appendChild(pro_box);
+row.appendChild(style);
+cont.appendChild(row);
+link.appendChild(cont);
+warp.appendChild(link);
+
+}
+};
+
+</script>
+
+{%for item in all_lchat%}
+  {%if item.sender == profile%}
+  <a href="{%url 'chatroom' item.receiver.id%}" style="color:black;text-decoration:none;">
+  {%else%}
+        <a href="{%url 'chatroom' item.sender.id%}" style="color:black;text-decoration:none;">
+  {%endif%}
+  <div class="container" id="{{item.id}}">
+    <div class="row">
+      <div class="col-md-6 offset-md-3">
+        <div class="profile-box">
+         {%if item.sender == profile %}
+          <img src="{{item.receiver.image.url}}" alt="Profile Image">
+          <span class="username">{{item.receiver.name}}</span>
+        {%else%}
+          <img src="{{item.sender.image.url}}" alt="Profile Image">
+          <span class="username">{{item.sender.name}}</span>
+        {%endif%}
+          <div class="text-center">
+            <small>{{item.message}}</small>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</a>
+{%endfor%}
 {%for item in connected %}
   <a href="{%url 'chatroom' item.id%}" style="color:black;text-decoration:none;">
   <div class="container">
@@ -26,6 +113,7 @@
   </div>
 </a>
 {%endfor%}
+
   <!-- Include Bootstrap JS -->
   <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
  {%endblock%}

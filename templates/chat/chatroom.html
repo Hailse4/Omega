@@ -14,7 +14,7 @@ Chat App
 
 <div class="chat-content" id="chat-content">
 {%for obj in all_chat%}
-{%if obj.sender == sprofile%}
+{%if obj.sender == rprofile%}
 <div class="chat-message chat-message-left">
 <img src="{{rprofile.image.url}}" alt="User1" class="chat-avatar">
 <p class="chat-text chat-text-left">{{obj.message}}</p>

@@ -5,7 +5,7 @@ from user_profile.models import UserProfile
 from django.shortcuts import render
 from django.urls import reverse_lazy
 from follow.models import FollowModel
-from .models import ChatModel 
+from .models import ChatModel, LiveChatModel 
 
 
 class ChatListView(LoginRequiredMixin,TemplateView):
@@ -20,8 +20,18 @@ class ChatListView(LoginRequiredMixin,TemplateView):
         for item in connected_friends:
             data = list(deserialize('json',item.following))[0].object
             connected_profiles.append(data)
+        sender_lchat = LiveChatModel.objects.filter(sender=profile)
+        sender_pro = [item.receiver for item in sender_lchat]
+        receiver_lchat = LiveChatModel.objects.filter(receiver=profile)
+        receiver_pro = [item.sender for item in receiver_lchat]
+        all_pro = sender_pro + receiver_pro
+        print(all_pro)
+        connected_profiles = [item for item in connected_profiles if not item in all_pro]
+        print(connected_profiles)
+        all_lchat = sender_lchat.union(receiver_lchat)
         context['connected'] = connected_profiles
         context['profile'] = profile 
+        context['all_lchat'] = all_lchat
         return context
     
 class ChatRoom(LoginRequiredMixin, TemplateView):
