@@ -1,10 +1,11 @@
-from django.test import TestCase,Client
+from django.test import TestCase,TransactionTestCase,SimpleTestCase,Client
 from django.contrib.auth.models import User
 from django.urls import reverse_lazy
 from user_profile.models import UserProfile
+from user_profile.forms import ProfileForm 
 
 
-class Test_user_profile_views(TestCase):
+class Test_user_profile_views(TransactionTestCase):
     def setUp(self):
         self.data = {
                      'username':'admin',
@@ -65,7 +66,7 @@ class Test_user_profile_views(TestCase):
         del self.profile
         del self.client
         
-class Test_user_profile_models(TestCase):
+class Test_user_profile_models(TransactionTestCase):
     def setUp(self):
         self.data = {
                      'username':'admin',
@@ -82,3 +83,23 @@ class Test_user_profile_models(TestCase):
         self.assertEqual(str(profile),profile.name)
     def tearDown(self):
         del self.user
+
+class Test_user_profile_forms(SimpleTestCase):
+    def test_profileform_with_valid_data(self):
+        data = {
+            'name':"Hailse",
+            'bio':"my biography",
+            'image':'test/image.png'
+        }
+        my_form = ProfileForm(data)
+        #test if ProfileForm is valid correctly with valid data
+        self.assertTrue(my_form.is_valid())
+    def test_profileform_with_invalid_data(self):
+        data = {
+            'name':'',
+            'bio':'',
+            'image':'test'
+        }
+        my_form = ProfileForm(data)
+        self.assertFalse(my_form.is_valid())
+    
